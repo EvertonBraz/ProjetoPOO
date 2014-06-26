@@ -72,7 +72,7 @@ public class AlunoTableModel extends AbstractTableModel {
 		else if (column == colSexo) {
 			if(a.getSexo() == 1)
 				return "Masculino";
-			else
+			if(a.getSexo() == 2)
 				return "Feminino";
 		}
 		else if (column == colCpf) {

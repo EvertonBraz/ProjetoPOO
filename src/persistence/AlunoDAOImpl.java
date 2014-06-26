@@ -74,90 +74,96 @@ public class AlunoDAOImpl implements AlunoDAO {
 	}
 
 	@Override
-	public Aluno pesquisarPorRa(int ra) {
-		String sql = "select * from tblAlunos where ra = ?";
+	public List<Aluno> pesquisarPorRa(int ra) {
+		String sql = "select * from tblAlunos where ra like ?";
+		List<Aluno> listaAlunos = new ArrayList<Aluno>();
 		try {
 			PreparedStatement ps = con.getConnection().prepareStatement(sql);
-			ps.setInt(1, ra);
+			ps.setString(1, "%" + ra + "%");
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			Aluno aluno = new Aluno();
-			aluno.setRa(rs.getInt("ra"));
-			aluno.setNome(rs.getString("nome"));
-			aluno.setDataNascimento(rs.getDate("dataNascimento"));
-			aluno.setSexo(rs.getInt("sexo"));
-			aluno.setCpf(rs.getString("cpf"));
-			aluno.setLogradouro(rs.getString("logradouro"));
-			aluno.setNumero(rs.getString("numero"));
-			aluno.setBairro(rs.getString("bairro"));
-			aluno.setCidade(rs.getString("cidade"));
-			aluno.setEstado(rs.getString("estado"));
-			aluno.setTelefone(rs.getString("telefone"));
-			aluno.setCelular(rs.getString("celular"));
-			aluno.setEmail(rs.getString("email"));
-			return aluno;
+			while(rs.next()){
+				Aluno aluno = new Aluno();
+				aluno.setRa(rs.getInt("ra"));
+				aluno.setNome(rs.getString("nome"));
+				aluno.setDataNascimento(rs.getDate("dataNascimento"));
+				aluno.setSexo(rs.getInt("sexo"));
+				aluno.setCpf(rs.getString("cpf"));
+				aluno.setLogradouro(rs.getString("logradouro"));
+				aluno.setNumero(rs.getString("numero"));
+				aluno.setBairro(rs.getString("bairro"));
+				aluno.setCidade(rs.getString("cidade"));
+				aluno.setEstado(rs.getString("estado"));
+				aluno.setTelefone(rs.getString("telefone"));
+				aluno.setCelular(rs.getString("celular"));
+				aluno.setEmail(rs.getString("email"));
+				listaAlunos.add(aluno);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return listaAlunos;
 	}
 
 	@Override
-	public Aluno pesquisarPorNome(String nome) {
+	public List<Aluno> pesquisarPorNome(String nome) {
 		String sql = "select * from tblAlunos where nome like ?";
+		List<Aluno> listaAlunos = new ArrayList<Aluno>();
 		try {
 			PreparedStatement ps = con.getConnection().prepareStatement(sql);
-			ps.setString(1, nome);
+			ps.setString(1, "%" + nome + "%");
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			Aluno aluno = new Aluno();
-			aluno.setRa(rs.getInt("ra"));
-			aluno.setNome(rs.getString("nome"));
-			aluno.setDataNascimento(rs.getDate("dataNascimento"));
-			aluno.setSexo(rs.getInt("sexo"));
-			aluno.setCpf(rs.getString("cpf"));
-			aluno.setLogradouro(rs.getString("logradouro"));
-			aluno.setNumero(rs.getString("numero"));
-			aluno.setBairro(rs.getString("bairro"));
-			aluno.setCidade(rs.getString("cidade"));
-			aluno.setEstado(rs.getString("estado"));
-			aluno.setTelefone(rs.getString("telefone"));
-			aluno.setCelular(rs.getString("celular"));
-			aluno.setEmail(rs.getString("email"));
-			return aluno;
+			while(rs.next()){
+				Aluno aluno = new Aluno();
+				aluno.setRa(rs.getInt("ra"));
+				aluno.setNome(rs.getString("nome"));
+				aluno.setDataNascimento(rs.getDate("dataNascimento"));
+				aluno.setSexo(rs.getInt("sexo"));
+				aluno.setCpf(rs.getString("cpf"));
+				aluno.setLogradouro(rs.getString("logradouro"));
+				aluno.setNumero(rs.getString("numero"));
+				aluno.setBairro(rs.getString("bairro"));
+				aluno.setCidade(rs.getString("cidade"));
+				aluno.setEstado(rs.getString("estado"));
+				aluno.setTelefone(rs.getString("telefone"));
+				aluno.setCelular(rs.getString("celular"));
+				aluno.setEmail(rs.getString("email"));
+				listaAlunos.add(aluno);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return listaAlunos;
 	}
 		
 	@Override
-	public Aluno pesquisarPorCpf(String cpf) {
+	public List<Aluno> pesquisarPorCpf(String cpf) {
 		String sql = "select * from tblAlunos where cpf like ?";
+		List<Aluno> listaAlunos = new ArrayList<Aluno>();
 		try {
 			PreparedStatement ps = con.getConnection().prepareStatement(sql);
-			ps.setString(1, cpf);
+			ps.setString(1, "%" + cpf + "%");
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			Aluno aluno = new Aluno();
-			aluno.setRa(rs.getInt("ra"));
-			aluno.setNome(rs.getString("nome"));
-			aluno.setDataNascimento(rs.getDate("dataNascimento"));
-			aluno.setSexo(rs.getInt("sexo"));
-			aluno.setCpf(rs.getString("cpf"));
-			aluno.setLogradouro(rs.getString("logradouro"));
-			aluno.setNumero(rs.getString("numero"));
-			aluno.setBairro(rs.getString("bairro"));
-			aluno.setCidade(rs.getString("cidade"));
-			aluno.setEstado(rs.getString("estado"));
-			aluno.setTelefone(rs.getString("telefone"));
-			aluno.setCelular(rs.getString("celular"));
-			aluno.setEmail(rs.getString("email"));
-			return aluno;
+			while(rs.next()){
+				Aluno aluno = new Aluno();
+				aluno.setRa(rs.getInt("ra"));
+				aluno.setNome(rs.getString("nome"));
+				aluno.setDataNascimento(rs.getDate("dataNascimento"));
+				aluno.setSexo(rs.getInt("sexo"));
+				aluno.setCpf(rs.getString("cpf"));
+				aluno.setLogradouro(rs.getString("logradouro"));
+				aluno.setNumero(rs.getString("numero"));
+				aluno.setBairro(rs.getString("bairro"));
+				aluno.setCidade(rs.getString("cidade"));
+				aluno.setEstado(rs.getString("estado"));
+				aluno.setTelefone(rs.getString("telefone"));
+				aluno.setCelular(rs.getString("celular"));
+				aluno.setEmail(rs.getString("email"));
+				listaAlunos.add(aluno);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
 		}
+		return listaAlunos;
 	}	
 
 	@Override
@@ -167,7 +173,15 @@ public class AlunoDAOImpl implements AlunoDAO {
 
 	@Override
 	public void remover(int ra) {
-		
+		String sql = "delete from tblAlunos where ra = ?";
+		try {
+			PreparedStatement ps = con.getConnection().prepareStatement(sql);
+			ps.setInt(1, ra);
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Aluno excluído com sucesso!", "Cadastro de Alunos", JOptionPane.INFORMATION_MESSAGE);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

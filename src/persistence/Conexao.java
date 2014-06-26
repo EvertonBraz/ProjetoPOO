@@ -15,7 +15,6 @@ public class Conexao {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdeventos", "root", "");
-			JOptionPane.showMessageDialog(null, "Dando certo!");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

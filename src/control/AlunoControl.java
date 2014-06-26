@@ -12,30 +12,37 @@ public class AlunoControl {
 	
 	AlunoDAOImpl alunoDAO = new AlunoDAOImpl();
 	List<Aluno> listaAluno = new ArrayList<Aluno>();
-	public void adicionar(Aluno aluno){
-		alunoDAO.adicionar(aluno);
-		AlunoView.addTableAluno(pesquisarPorRa(aluno.getRa()));
-	}
-	
-	public Aluno pesquisarPorRa(int ra){
-		Aluno aluno = alunoDAO.pesquisarPorRa(ra);
-		return aluno;
-	}
-	
-	public Aluno pesquisarPorNome(String nome){
-		Aluno aluno = alunoDAO.pesquisarPorNome(nome);
-		AlunoView.showAluno(aluno);
-		return aluno;
-	}
-	
-	public Aluno pesquisarPorCpf(String cpf){
-		Aluno aluno = alunoDAO.pesquisarPorCpf(cpf);
-		AlunoView.showAluno(aluno);
-		return aluno;
-	}
 	
 	public List<Aluno> listar(){
 		return alunoDAO.listar();
+	}
+	
+	public List<Aluno> pesquisarPorRa(int ra){
+		listaAluno = alunoDAO.pesquisarPorRa(ra);
+		AlunoView.showTableAluno(listaAluno); 
+		return listaAluno;
+	}
+	
+	public List<Aluno> pesquisarPorNome(String nome){
+		listaAluno = alunoDAO.pesquisarPorNome(nome);
+		AlunoView.showTableAluno(listaAluno);
+		return listaAluno;
+	}
+	
+	public List<Aluno> pesquisarPorCpf(String cpf){
+		listaAluno = alunoDAO.pesquisarPorCpf(cpf);
+		AlunoView.showTableAluno(listaAluno);
+		return listaAluno;
+	}
+	
+	public void adicionar(Aluno aluno){
+		alunoDAO.adicionar(aluno);
+		aluno = alunoDAO.pesquisarPorRa(aluno.getRa()).get(0);
+		AlunoView.addTableAluno(aluno);
+	}
+	
+	public void remover(int ra){
+		alunoDAO.remover(ra);
 	}
 
 }

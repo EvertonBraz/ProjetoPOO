@@ -8,6 +8,11 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -32,6 +37,8 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -62,7 +69,7 @@ public class AlunoView extends JDialog {
 	private ButtonGroup bgPesquisa;
 	private JRadioButton rbNome, rbRa, rbCpf;
 	//JButtons
-	private JButton btnNovo, btnPesquisar, btnInserir, btnAtualizar, btnExcluir, btnCancelar;
+	private JButton btnNovo, btnInserir, btnAtualizar, btnExcluir, btnCancelar;
 	//JTable
 	private static JTable tabela;
 	private JScrollPane barraRolagem;
@@ -105,24 +112,16 @@ public class AlunoView extends JDialog {
 		tabela.getColumnModel().getColumn(11).setMinWidth(100);
 		tabela.getColumnModel().getColumn(12).setMinWidth(200);
 		
-		tabela.addMouseListener(new MouseListener() {
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
+		tabela.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e){
+				if(tabela.isEnabled()){
+					if(e.getClickCount() == 2){
+						pesquisarAlunoTabela();
+					}
+				}
 			}
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-			}
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-			}
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-			}
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				JOptionPane.showMessageDialog(null,tabela.getSelectedRow());
-			}
-		});}
+		});						
+	}
 		
 	
 	public static void pesquisar() {
@@ -199,12 +198,50 @@ public class AlunoView extends JDialog {
 		txtPesquisar.setFont(fontText);
 		txtPesquisar.setVisible(true);
 		janela.add(txtPesquisar);
+		txtPesquisar.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				if(txtPesquisar.getText().equals(""))
+					pesquisar();
+				else
+					pesquisaAproximada();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				pesquisaAproximada();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				pesquisaAproximada();
+			}
+		});
 		
 		txtPesquisarCpf = new JFormattedTextField(mascara.formatar("###.###.###-##"));
 		txtPesquisarCpf.setBounds(55,40,130,25);
 		txtPesquisarCpf.setFont(fontText);
 		txtPesquisarCpf.setVisible(false);
 		janela.add(txtPesquisarCpf);
+		txtPesquisarCpf.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent arg0) {
+				if(txtPesquisarCpf.getText().equals(""))
+					pesquisar();
+				else
+					pesquisaAproximada();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent arg0) {
+				pesquisaAproximada();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent arg0) {
+				pesquisaAproximada();
+			}
+		});
 		
 		barraRolagem = new JScrollPane(tabela, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		JLabel lblTeste = new JLabel("Testando");
@@ -383,19 +420,6 @@ public class AlunoView extends JDialog {
 		txtEmail.setEditable(false);
 		txtEmail.setVisible(false);
 		janela.add(txtEmail);
-
-		btnPesquisar = new JButton();
-		int posicao = txtPesquisar.getX() + txtPesquisar.getWidth() + 5;
-		btnPesquisar.setBounds(posicao,37,30,30);
-		btnPesquisar.setFont(fontButton);
-		btnPesquisar.setToolTipText("Pesquisar aluno");
-		btnPesquisar.setIcon(new ImageIcon("imagens/icones_botoes/search.png"));
-		btnPesquisar.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				pesquisarAluno();
-			}
-		});
-		janela.add(btnPesquisar);
 		
 		btnNovo = new JButton("Novo");
 		btnNovo.setBounds(565,40,120,30);
@@ -445,7 +469,7 @@ public class AlunoView extends JDialog {
 		btnExcluir.setVisible(false);
 		btnExcluir.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				
+				removerAluno();
 			}
 		});
 		janela.add(btnExcluir);
@@ -472,23 +496,17 @@ public class AlunoView extends JDialog {
 			txtPesquisarCpf.setVisible(false);
 			txtPesquisar.setVisible(true);
 			txtPesquisar.setBounds(70,40,250,25);
-			int posicao = txtPesquisar.getX() + txtPesquisar.getWidth() + 5;
-			btnPesquisar.setBounds(posicao,37,30,30);
 		}
 		if(rbTipo.getText().equals("RA:")){
 			lblPesquisar.setText(rbRa.getText());
 			txtPesquisarCpf.setVisible(false);
 			txtPesquisar.setVisible(true);
 			txtPesquisar.setBounds(50,40,80,25);
-			int posicao = txtPesquisar.getX() + txtPesquisar.getWidth() + 5;
-			btnPesquisar.setBounds(posicao,37,30,30);
 		}
 		if(rbTipo.getText().equals("CPF:")){
 			lblPesquisar.setText(rbCpf.getText());
 			txtPesquisar.setVisible(false);
 			txtPesquisarCpf.setVisible(true);
-			int posicao = txtPesquisarCpf.getX() + txtPesquisarCpf.getWidth() + 5;
-			btnPesquisar.setBounds(posicao,37,30,30);
 		}
 	}
 	
@@ -506,7 +524,7 @@ public class AlunoView extends JDialog {
 		aluno.setDataNascimento(data);
 		if(cbSexo.getSelectedItem().equals("Masculino"))
 			aluno.setSexo(1);
-		else
+		if(cbSexo.getSelectedItem().equals("Feminino"))
 			aluno.setSexo(2);
 		aluno.setCpf(txtCpf.getText());
 		aluno.setLogradouro(txtLogradouro.getText());
@@ -526,7 +544,7 @@ public class AlunoView extends JDialog {
 		txtDataNascimento.setText("06/04/1994");
 		if(aluno.getSexo() == 1)
 			cbSexo.setToolTipText("Masculino");
-		else
+		if(aluno.getSexo() == 2)
 			cbSexo.setToolTipText("Feminino");
 		txtCpf.setText(aluno.getCpf());
 		txtLogradouro.setText(aluno.getLogradouro());
@@ -539,24 +557,34 @@ public class AlunoView extends JDialog {
 		txtEmail.setText(aluno.getEmail());
 	}
 	
-	public void pesquisarAluno(){
-		if(!janelaGrande)
-			aumentarJanela();
-		Aluno aluno = new Aluno();
+	public void pesquisaAproximada(){
+		List<Aluno> listaAlunos = new ArrayList<Aluno>();
 		if(rbRa.isSelected()){
-			aluno = ctrl.pesquisarPorRa(Integer.parseInt(txtPesquisar.getText()));
-			AlunoView.showAluno(aluno);
+			listaAlunos = ctrl.pesquisarPorRa(Integer.parseInt(txtPesquisar.getText()));
+			AlunoView.showTableAluno(listaAlunos);
 		}
 		if(rbNome.isSelected()){
-			aluno = ctrl.pesquisarPorNome(txtPesquisar.getText());
-			AlunoView.showAluno(aluno);
+			listaAlunos = ctrl.pesquisarPorNome(txtPesquisar.getText());
+			AlunoView.showTableAluno(listaAlunos);
 		}
 		if(rbCpf.isSelected()){
-			aluno = ctrl.pesquisarPorCpf(txtPesquisarCpf.getText());
-			AlunoView.showAluno(aluno);
+			listaAlunos = ctrl.pesquisarPorCpf(txtPesquisarCpf.getText());
+			AlunoView.showTableAluno(listaAlunos);
 		}
+	}
+	
+	public void pesquisarAlunoTabela(){
+		if(!janelaGrande)
+			aumentarJanela();
+		btnNovo.setEnabled(true);
+		btnAtualizar.setEnabled(true);
+		btnExcluir.setEnabled(true);
+		Aluno aluno =  modelo.getAluno(tabela.getSelectedRow());
+		ctrl.pesquisarPorRa(aluno.getRa());
+		List<Aluno> listaAlunos = new ArrayList();
+		listaAlunos.add(aluno);
+		AlunoView.showTableAluno(listaAlunos);
 		toAlunoView(aluno);
-		txtPesquisar.setText("");
 	}
 	
 	public void novoAluno(){
@@ -564,6 +592,11 @@ public class AlunoView extends JDialog {
 			aumentarJanela();
 		btnNovo.setEnabled(false);
 		btnInserir.setEnabled(true);
+		btnAtualizar.setEnabled(false);
+		btnExcluir.setEnabled(false);
+		txtPesquisar.setEnabled(false);
+		txtPesquisarCpf.setEnabled(false);
+		tabela.setEnabled(false);
 		limparCampos();
 		liberarDigitacaoCampos();
 		pesquisar();
@@ -573,14 +606,32 @@ public class AlunoView extends JDialog {
 		ctrl.adicionar(fromAlunoView());
 		btnInserir.setEnabled(false);
 		limparCampos();
+		bloquearDigitacaoCampos();
+		btnNovo.setEnabled(true);
+		tabela.setEnabled(true);
+	}
+	
+	public void removerAluno(){
+		int respostaSair;
+   	 	respostaSair =  JOptionPane.showOptionDialog(null, "Deseja realmente excluir este aluno?","Atenção",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);  
+	    if(respostaSair == JOptionPane.YES_OPTION){  
+	    	ctrl.remover(Integer.parseInt(txtRa.getText()));
+	    	limparCampos();
+	    	btnAtualizar.setEnabled(false);
+	    	btnExcluir.setEnabled(false);
+	    	pesquisar();
+	    }
 	}
 	
 	public void cancelar(){
 		btnCancelar.setEnabled(false);
+		txtPesquisar.setEnabled(true);
+		txtPesquisarCpf.setEnabled(true);
 		limparCampos();
 		bloquearDigitacaoCampos();
 		diminuirJanela();
 		pesquisar();
+		tabela.setEnabled(true);
 	}
 	
 	public void aumentarJanela(){
@@ -589,6 +640,7 @@ public class AlunoView extends JDialog {
 		barraRolagem.setLocation(barraRolagem.getX(), barraRolagem.getY() + 270);
 		btnNovo.setEnabled(false);
 		btnInserir.setVisible(true);
+		btnInserir.setEnabled(false);
 		btnAtualizar.setVisible(true);
 		btnExcluir.setVisible(true);
 		btnCancelar.setVisible(true);
@@ -627,7 +679,9 @@ public class AlunoView extends JDialog {
 		btnNovo.setEnabled(true);
 		btnInserir.setVisible(false);
 		btnAtualizar.setVisible(false);
+		btnAtualizar.setEnabled(false);
 		btnExcluir.setVisible(false);
+		btnExcluir.setEnabled(false);
 		btnCancelar.setVisible(false);
 		btnCancelar.setEnabled(false);
 		lblRa.setVisible(false);
@@ -686,6 +740,8 @@ public class AlunoView extends JDialog {
 	}
 	
 	public void limparCampos(){
+		txtPesquisar.setText("");
+		txtPesquisarCpf.setText("");
 		txtRa.setText("");
 		txtNome.setText("");
 		txtDataNascimento.setText("");
@@ -705,12 +761,11 @@ public class AlunoView extends JDialog {
 		modelo.addAluno(aluno);
 	}
 	
-	public static void showAluno(Aluno aluno){
-		List<Aluno> alunos = new ArrayList<Aluno>();
-		alunos.add(aluno);
-		AlunoTableModel mod;
-		mod = new AlunoTableModel(alunos);
-		tabela.setModel(mod);	
+	
+	public static void showTableAluno(List<Aluno> lista){
+		AlunoDAOImpl dao = new AlunoDAOImpl();
+		AlunoTableModel modeloPesquisa = new AlunoTableModel(lista);
+		tabela.setModel(modeloPesquisa);
 	}
 
 }
