@@ -82,9 +82,12 @@ public class AlunoView extends JDialog {
 	MascaraEntrada mascara = new MascaraEntrada();
 	
 	//Controle do tamanho da janela
-	private static boolean janelaGrande;
+	private boolean janelaGrande;
 	
 	AlunoControl ctrl = new AlunoControl();
+	
+	//Se a função = inserir(inserir novo registro) ou funcao = salvar(salvar alteração de regitro)
+	private String funcao;
 
 	/**
 	 * Create the dialog.
@@ -428,6 +431,7 @@ public class AlunoView extends JDialog {
 		btnNovo.setIcon(new ImageIcon("imagens/icones_botoes/add.png"));
 		btnNovo.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				funcao = "inserir";
 				novoAluno();
 			}
 		});
@@ -442,7 +446,11 @@ public class AlunoView extends JDialog {
 		btnInserir.setVisible(false);
 		btnInserir.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				inserirAluno();
+				if(funcao == "inserir")
+					inserirAluno();
+				if(funcao == "salvar"){
+					salvarAtualizacaoAluno(Integer.parseInt(tabela.getModel().getValueAt(0, 0).toString()));
+				}
 			}
 		});
 		janela.add(btnInserir);
@@ -456,6 +464,8 @@ public class AlunoView extends JDialog {
 		btnAtualizar.setVisible(false);
 		btnAtualizar.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
+				funcao = "salvar";
+				atualizarAluno();
 			}
 		});
 		janela.add(btnAtualizar);
@@ -603,12 +613,32 @@ public class AlunoView extends JDialog {
 	}
 	
 	public void inserirAluno(){
-		ctrl.adicionar(fromAlunoView());
-		btnInserir.setEnabled(false);
-		limparCampos();
-		bloquearDigitacaoCampos();
-		btnNovo.setEnabled(true);
-		tabela.setEnabled(true);
+			ctrl.adicionar(fromAlunoView());
+			btnInserir.setEnabled(false);
+			limparCampos();
+			bloquearDigitacaoCampos();
+			btnNovo.setEnabled(true);
+			tabela.setEnabled(true);
+	}
+	
+	public void atualizarAluno(){
+		liberarDigitacaoCampos();
+		btnAtualizar.setEnabled(false);
+		btnExcluir.setEnabled(false);
+		btnInserir.setEnabled(true);
+	}
+	
+	public void salvarAtualizacaoAluno(int ra){
+		int respostaSair;
+   	 	respostaSair =  JOptionPane.showOptionDialog(null, "Deseja realmente alterar este aluno?","Atenção",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);  
+	    if(respostaSair == JOptionPane.YES_OPTION){
+	    	ctrl.atualizar(ra, fromAlunoView());
+	    	btnInserir.setEnabled(false);
+	    	limparCampos();
+	    	bloquearDigitacaoCampos();
+	    	btnNovo.setEnabled(true);
+	    	tabela.setEnabled(true);
+	    }
 	}
 	
 	public void removerAluno(){

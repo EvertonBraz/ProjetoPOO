@@ -9,8 +9,10 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
 import java.awt.Dialog.ModalExclusionType;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
@@ -77,7 +79,11 @@ public class PrincipalView extends JFrame {
 		
 		sair.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				System.exit(0);
+				int respostaSair;
+		   	 	respostaSair =  JOptionPane.showOptionDialog(null, "Deseja realmente sair do sistema?","Atenção",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);  
+			    if(respostaSair == JOptionPane.YES_OPTION){  
+			    	System.exit(0);
+			    }
 			}
 		});
 		

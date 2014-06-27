@@ -38,6 +38,7 @@ public class AlunoDAOImpl implements AlunoDAO {
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Aluno inserido com sucesso!", "Cadastro de Alunos", JOptionPane.INFORMATION_MESSAGE);
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Não foi possível inserir o aluno!", "Cadastro de Alunos", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}
@@ -67,7 +68,6 @@ public class AlunoDAOImpl implements AlunoDAO {
 				listaAlunos.add(aluno);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return listaAlunos;
@@ -99,6 +99,7 @@ public class AlunoDAOImpl implements AlunoDAO {
 				listaAlunos.add(aluno);
 			}
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Não foi possível pesquisar o aluno!", "Pesquisa de Alunos", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		return listaAlunos;
@@ -130,6 +131,7 @@ public class AlunoDAOImpl implements AlunoDAO {
 				listaAlunos.add(aluno);
 			}
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Não foi possível pesquisar o aluno!", "Pesquisa de Alunos", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		return listaAlunos;
@@ -161,6 +163,7 @@ public class AlunoDAOImpl implements AlunoDAO {
 				listaAlunos.add(aluno);
 			}
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Não foi possível pesquisar o aluno!", "Pesquisa de Alunos", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 		return listaAlunos;
@@ -168,7 +171,32 @@ public class AlunoDAOImpl implements AlunoDAO {
 
 	@Override
 	public void atualizar(int ra, Aluno aluno) {
+		String sql = "update tblAlunos set  ra = ?, nome = ?, dataNascimento = ?, sexo = ?, cpf = ?, logradouro = ?, numero = ?, bairro = ?, cidade = ?, estado = ?, telefone = ?, celular = ?, email = ? where ra = ?";
 		
+		try {
+			PreparedStatement ps = con.getConnection().prepareStatement(sql);
+			ps.setInt(1, aluno.getRa());
+			ps.setString(2, aluno.getNome());			
+			ps.setDate(3, new java.sql.Date(aluno.getDataNascimento().getTime()));
+			ps.setInt(4, aluno.getSexo());
+			ps.setString(5, aluno.getCpf());
+			ps.setString(6, aluno.getLogradouro());
+			ps.setString(7, aluno.getNumero());
+			ps.setString(8, aluno.getBairro());
+			ps.setString(9, aluno.getCidade());
+			ps.setString(10, aluno.getEstado());
+			ps.setString(11, aluno.getTelefone());
+			ps.setString(12, aluno.getCelular());
+			ps.setString(13, aluno.getEmail());
+			ps.setInt(14, ra);
+			ps.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Aluno alterado com sucesso!", "Alteração de Alunos", JOptionPane.INFORMATION_MESSAGE);
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Não foi possível alterar o aluno!", "Alteração de Alunos", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
+		
+
 	}
 
 	@Override
@@ -180,6 +208,7 @@ public class AlunoDAOImpl implements AlunoDAO {
 			ps.executeUpdate();
 			JOptionPane.showMessageDialog(null, "Aluno excluído com sucesso!", "Cadastro de Alunos", JOptionPane.INFORMATION_MESSAGE);
 		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(null, "Não foi possível excluir o aluno!", "Exclusão de Alunos", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 	}

@@ -41,6 +41,10 @@ public class AlunoControl {
 		AlunoView.addTableAluno(aluno);
 	}
 	
+	public void atualizar(int ra, Aluno aluno){
+		alunoDAO.atualizar(ra, aluno);
+	}
+	
 	public void remover(int ra){
 		alunoDAO.remover(ra);
 	}
